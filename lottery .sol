@@ -45,7 +45,7 @@
 
 
     function  buyLottery(string memory name) public payable lotteryBuyingTime lotteryEndingTime{
-        require(msg.value==lotteryticket," pay 10 ether to buy one lottery");
+        require(msg.value==lotteryticket," pay 10 ether to buy one lottery ");
         require(participants[msg.sender].hasparticipated==false,"you aldready bought ticket");
         participants[msg.sender]=User(name,msg.sender,true);
         candidates.push(participants[msg.sender]);
