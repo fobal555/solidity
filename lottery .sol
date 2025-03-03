@@ -1,6 +1,6 @@
  // SPDX-License-Identifier: MIT
  pragma solidity ^0.8.0;
- contract lottersystem{
+ contract LotterySystem{
     uint starttime;
     uint endtime;
     uint public constant lotteryticket = 10 * 1 ether;
