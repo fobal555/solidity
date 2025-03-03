@@ -4,7 +4,7 @@
     uint starttime;
     uint endtime;
     uint public constant lotteryticket = 10 * 1 ether;
-    address private lotterwinner;
+    address private lotteryWinner;
     bool private lotteryover;
     address private owner;
     bool moneytransfered;
@@ -21,56 +21,56 @@
         _;
         
     }
-    modifier  lotterbuy(){
-        require(block.timestamp>starttime,"still not started");
+    modifier  lotteryBuyingTime(){
+        require(block.timestamp>starttime,"Buying lottery still not started");
         _;
     }
-    modifier lotterend(){
-        require(block.timestamp<endtime,"ended");
+    modifier lotteryEndingTime(){
+        require(block.timestamp<endtime,"Lottery buying is over ");
         _;
     }
     modifier declare(){
-        require(block.timestamp>endtime,"lottery buying is still going on");
+        require(block.timestamp>endtime,"Lottery buying is still going on");
         _;
     }
-    struct  user{
+    struct  User{
         string name;
         address wallet;
         bool  hasparticipated;
 
 
     }
-    mapping(address => user) participants;
-    user[] candidates;
+    mapping(address => User) participants;
+    User[] candidates;
 
 
-    function  buylotter(string memory name) public payable {
+    function  buyLottery(string memory name) public payable lotteryBuyingTime lotteryEndingTime{
         require(msg.value==lotteryticket," pay 10 ether to buy one lottery");
         require(participants[msg.sender].hasparticipated==false,"you aldready bought ticket");
-        participants[msg.sender]=user(name,msg.sender,true);
+        participants[msg.sender]=User(name,msg.sender,true);
         candidates.push(participants[msg.sender]);
 
 
     }
-    function  Declarelottery() public  onlyowner returns(string  memory , address){
+    function  declareLotteryWinner() public  onlyowner returns(string  memory , address){
         require(lotteryover==false,"aldready declared");
          uint  index=uint(block.timestamp) % (candidates.length);
-         lotterwinner=candidates[index].wallet;
+         lotteryWinner=candidates[index].wallet;
          lotteryover=true;
          return (candidates[index].name , candidates[index].wallet);
         
    
 
     } 
-    function Winnername() public onlyowner view returns(string memory , address){
+    function WinnerName() public onlyowner view returns(string memory , address){
         require(lotteryover==true,"winner is still not declared");
-        return (participants[lotterwinner].name,participants[lotterwinner].wallet);
+        return (participants[lotteryWinner].name,participants[lotteryWinner].wallet);
     }
-    function transfermoneytowinner() public payable onlyowner{
+    function transferMoneyToOwner() public payable onlyowner{
         require(moneytransfered==false,"money aldready transfered");
         require(lotteryover==true,"winner is still not declared");
         moneytransfered=true;
-        payable(lotterwinner).transfer(address(this).balance);
+        payable(lotteryWinner).transfer(address(this).balance);
 
     }
  }
