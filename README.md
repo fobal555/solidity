@@ -1,1 +1,1 @@
-# solidity
+# solidity mini projects
